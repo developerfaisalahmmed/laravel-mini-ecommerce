@@ -1205,7 +1205,7 @@ ul.flat-unstyled li > ul > li > a {
 -------------------------------------------------------------- */
 #mega-menu {
 	position:relative;
-	top:3px;
+	top:-3px;
 	height:55px;
 	width:250px;
 	-webkit-transition:all 0.3s ease-in-out;
@@ -1223,7 +1223,7 @@ ul.flat-unstyled li > ul > li > a {
 	padding-left:87px;
 	line-height:65px;
 	/*background-color:#484848;*/
-	background-color:#f28b00;
+	/*background-color:#f28b00;*/
 	border-top-left-radius:9px;
 	border-top-right-radius:9px;
 	position:relative;

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Categories')
+@section('title', 'Products')
 
 @push('css')
 
@@ -10,8 +10,12 @@
 @section('content')
 
 
-    <h6 class="mb-0 text-uppercase"> Products </h6>
+    <div class="d-flex justify-content-between">
+        <h6 class="mb-0 text-uppercase"> Products </h6>
+        <a class="btn btn-success" href="{{route('products.create')}}"> New Products </a>
+    </div>
     <hr/>
+
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
@@ -38,7 +42,11 @@
                         <td>{{$product->price}}</td>
                         <td>{{$product->selling_price}}</td>
                         <td>{{$product->quantity}}</td>
-                        <td> <img width="100px" src="{{json_decode($product->image) ?? 'Null'}}"> </td>
+                        <td>
+                            @foreach(json_decode($product->image) ?? 'null' as $image)
+                                <img width="100px" src="{{$image ?? 'Null'}}">
+                            @endforeach
+                        </td>
                         <td>
                             @foreach($product->products_category ?? 'null' as $category)
                                 <a class="btn btn-success btn-sm btn-group">{{$category->name ?? 'Null'}}</a>

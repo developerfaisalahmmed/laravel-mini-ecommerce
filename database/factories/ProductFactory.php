@@ -23,7 +23,7 @@ class ProductFactory extends Factory
             'description' => fake()->paragraph('50'),
             'status' => '1',
             'quantity' => '99',
-            'image' => json_encode(fake()->imageUrl()),
+            'image' => json_encode([fake()->imageUrl(),fake()->imageUrl()]),
         ];
     }
 }

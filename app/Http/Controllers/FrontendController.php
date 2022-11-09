@@ -17,7 +17,11 @@ class FrontendController extends Controller
     {
         $data['categories'] = Category::all();
 
-        $data['category_products'] = Category::with('category_products')->get();
+
+        $data['category_products'] = Category::with(['category_products'])->get()->map(function ($query) {
+            $query->setRelation('category_products', $query->category_products->take(12));
+            return $query;
+        });
 
 //        return $data['category_products'];
 
@@ -33,6 +37,17 @@ class FrontendController extends Controller
 //        return $data['category_products'];
 
         return view('frontend.category_products',$data);
+
+    }
+
+    public function productDetails($slug)
+    {
+
+        $data['product'] = Product::with('products_category')->where('slug',$slug)->first();
+
+//        return $data['product'];
+
+        return view('frontend.product_details',$data);
 
     }
 

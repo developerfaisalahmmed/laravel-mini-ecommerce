@@ -16,11 +16,11 @@
                             <div class="card-jfy-row J_Row1">
                                 @foreach($category_products->category_products  as $product)
                                     <div class="card-jfy-item-wrapper hp-mod-card-hover J_Items inline my-2">
-                                        <a href="">
+                                        <a href="{{route('product.details',$product->slug)}}">
                                             <div class="card-jfy-item">
 
                                                 <div class="card-jfy-image card-jfy-image-background J_GridImage">
-                                                    <img class="image" src="{{json_decode($product->image) ?? 'Null'}}" alt="">
+                                                    <img class="image" src="{{asset(json_decode($product->image)[0]) ?? 'Null'}}" alt="">
                                                 </div>
 
                                                 <div class="card-jfy-item-desc">
@@ -40,7 +40,7 @@
 
                                                         <div class="hp-mod-price-second-line"><span class="hp-mod-price-text align-left">
                                                     <span class="currency">৳</span><span class="price">{{$product->price}}</span></span>
-                                                            <span class="hp-mod-discount align-left"> -35%</span></div>
+                                                            <span class="hp-mod-discount align-left"> ৳{{$product->price - $product->selling_price}}</span></div>
                                                     </div>
 
 

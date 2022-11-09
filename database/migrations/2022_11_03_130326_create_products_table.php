@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->float('price')->default('100.50');
+            $table->integer('quantity')->default('0');
+            $table->integer('discount_type')->default('1');
+            $table->integer('discount')->default('0');
             $table->float('selling_price')->default('100.50');
-            $table->integer('quantity')->default('0')->comment('by default product will be 0 quantity');
             $table->json('image')->nullable();
             $table->longText('description');
             $table->integer('status')->default('1')->comment('product will active or in active, 0 = inactive, 1 = active');

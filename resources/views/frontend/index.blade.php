@@ -16,7 +16,7 @@
                         <div class="card-categories-li hp-mod-card-hover align-left">
                             <a class="card-categories-li-content" href="{{route('category.products',$category->slug)}}">
                                 <div class="card-categories-image-container">
-                                    <img class="image" src="{{$category->image}}" alt="Mobiles">
+                                    <img class="image" src="{{asset($category->image)}}" alt="Mobiles">
                                 </div>
                                 <div class="card-categories-name"> <span class="text">{{$category->name}}</span> </div>
                             </a>
@@ -37,7 +37,7 @@
                 {{--            @if(count( $category_product->category_products) > 0)--}}
                 <div class="hp-mod-card-header d-flex justify-content-between">
                     <h3 class="hp-mod-card-title" data-spm-anchor-id="a2a0e.home.just4u.i0.4c2e12f7iOhPhU">{{$category_product->name}}</h3>
-                    <h3 class="hp-mod-card-title-end"> <a href="" class="btn btn-sm btn-info btn-quick-on-shop">View All</a> </h3>
+                    <h3 class="hp-mod-card-title-end"> <a href="{{route('category.products',$category_product->slug)}}" class="btn btn-sm btn-info btn-quick-on-shop">View All</a> </h3>
                 </div>
 
                 <div class="hp-mod-card-content J_JFYCard">
@@ -47,11 +47,11 @@
                             <div class="card-jfy-row J_Row1">
                                 @foreach($category_product->category_products  as $product)
                                     <div class="card-jfy-item-wrapper hp-mod-card-hover J_Items inline my-2">
-                                        <a href="">
+                                        <a href="{{route('product.details',$product->slug)}}">
                                             <div class="card-jfy-item">
 
                                                 <div class="card-jfy-image card-jfy-image-background J_GridImage">
-                                                    <img class="image" src="{{json_decode($product->image) ?? 'Null'}}" alt="">
+                                                    <img class="image" src="{{json_decode($product->image)[0] ?? 'Null'}}" alt="">
                                                 </div>
 
                                                 <div class="card-jfy-item-desc">
@@ -71,7 +71,7 @@
 
                                                         <div class="hp-mod-price-second-line"><span class="hp-mod-price-text align-left">
                                                     <span class="currency">৳</span><span class="price">{{$product->price}}</span></span>
-                                                            <span class="hp-mod-discount align-left"> -35%</span></div>
+                                                            <span class="hp-mod-discount align-left"> ৳{{$product->price - $product->selling_price}}</span></div>
                                                     </div>
 
 

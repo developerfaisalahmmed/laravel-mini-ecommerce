@@ -25,3 +25,4 @@ require __DIR__.'/backend.php';
 
 
 Route::get('/category-products/{slug}', [FrontendController::class,'categoryProducts'])->name('category.products');
+Route::get('/product-details/{slug}', [FrontendController::class,'productDetails'])->name('product.details');

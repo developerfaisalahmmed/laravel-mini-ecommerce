@@ -33,6 +33,11 @@
 
     <link href="{{asset('backend')}}/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
 
+
+    <link rel="stylesheet" href="{{asset('backend')}}/plugins/toastr/toastr.min.css">
+    <link rel="stylesheet" href="{{asset('backend')}}/plugins/summernote/summernote-bs4.min.css">
+    <link rel="stylesheet" href="{{asset('backend')}}/plugins/select2/select2.min.css"  />
+
     @stack('css')
 
 
@@ -99,6 +104,79 @@
     } );
 </script>
 
+
+
+<!-- No image -->
+<script src="{{asset('backend')}}/plugins/noimage/no-image.js"></script>
+
+<!--Product Default image one -->
+<script>
+    $(document).ready(function() {
+        $('#defaultImage').change(function(e) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#showDefaultImage').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(e.target.files['0']);
+        });
+    });
+</script>
+
+
+
+<!-- Toastr -->
+<script src="{{asset('backend')}}/plugins/toastr/toastr.min.js"></script>
+<script>
+    @if(Session::has('message'))
+    var type = "{{Session::get('alert-type','info')}}"
+
+    switch (type) {
+        case 'info':
+            toastr.info("{{ Session::get('message') }}");
+            break;
+        case 'success':
+            toastr.success("{{ Session::get('message') }}");
+            break;
+        case 'warning':
+            toastr.warning("{{ Session::get('message') }}");
+            break;
+        case 'error':
+            toastr.error("{{ Session::get('message') }}");
+            break;
+    }
+    @endif
+</script>
+<!-- Toastr -->
+
+<!-- Summernote -->
+<script src="{{asset('backend')}}/plugins/summernote/summernote-bs4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.summernote').summernote();
+    });
+</script>
+
+
+
+
+<!-- Sweetalert -->
+<script src="{{asset('backend')}}/plugins/sweetalert/sweetalert2@9.js"></script>
+<script src="{{asset('backend')}}/plugins/sweetalert/sweetalertjs.js"></script>
+
+
+
+<!-- select2 -->
+<script src="{{asset('backend')}}/plugins/select2/select2.min.js"></script>
+
+
+
+<!-- select2 -->
+<script>
+    $(document).ready(function() {
+        $('.myselect2').select2();
+    });
+</script>
 
 
 @stack('js')

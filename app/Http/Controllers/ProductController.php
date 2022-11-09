@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -15,7 +17,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('products_category')->get();
+        $products = Product::with('products_category')->orderBy('id','DESC')->get();
 //        return $products;
         return  view('backend.products.index',compact('products'));
     }
@@ -27,7 +29,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return  view('backend.products.create');
+
     }
 
     /**
@@ -38,7 +41,45 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        //
+//        $validator = Validator::make($request->all(), [
+//            'title' => 'required',
+//            'price' => 'required',
+//            'description' => 'required',
+//            'image' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
+//        ]);
+//
+//        if ($validator->fails()) {
+//            $notification = array(
+//                'message' => 'Opps! Something went wrong .Please Try Again.',
+//                'alert-type' => 'error'
+//            );
+//            return redirect()->back()->withErrors($validator)->withInput()->with($notification);
+//        } else {
+            $input  = $request->all();
+
+            if($request->hasfile('image'))
+            {
+                foreach($request->file('image') as $image)
+                {
+                    $product_image = $image;
+                    $extension = $product_image->getClientOriginalExtension();
+                    $product_name = "product_" . time() . "." . $extension;
+                    $image->move(public_path('uploads/product/'), $product_name);
+                    $data[] = 'uploads/product/'.$product_name;
+                }
+            }
+
+            $input['image'] = json_encode($data);
+            $input['slug'] = Str::slug($request->title);
+
+            Product::create($input);
+            $notification = array(
+                'message' => 'The new category publish successfully',
+                'alert-type' => 'success'
+            );
+            return redirect()->route('categories.index')->with($notification);
+//
+//        }
     }
 
     /**
