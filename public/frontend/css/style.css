@@ -1,5 +1,6 @@
 
 
+
 .logo_image{
     width: 200px !important;
     height: 111px !important;
@@ -2005,6 +2006,7 @@ ul.menu li.column-1 .submenu > li > a i {
 
 
 /* This css for Responsive*/
+
 @media only screen and (max-width:1900px) {
 
 	footer.style1 {
@@ -4987,3 +4989,58 @@ body {
 }
 
 
+
+/* This css for Responsive*/
+@media (min-width:300px) and (max-width:600px) {
+
+    .align-left {
+        float:none !important;
+    }
+
+    .card-categories-li {
+        width: 36.5%;
+        height: 148.5px;
+        border-right: 1px solid #e2e2e2;
+        border-bottom: 1px solid #e2e2e2;
+        background-color: #fff;
+    }
+
+    .card-categories-image-container {
+        margin: 0 auto;
+        width: 276px;
+        height: 86px;
+    }
+
+
+    .inline {
+        display: block;
+    }
+
+    .card-jfy-item-wrapper {
+        vertical-align: top;
+        width: 100%;
+        margin-left: 10px;
+        min-height: 189px;
+        background: #fff;
+        height: 100%;
+    }
+
+    .card-jfy-image {
+        width: 37%;
+        height: 189px;
+    }
+
+    .flat-support{
+        display: none !important;
+    }
+    .flat-support-mobile2{
+        display: none !important;
+    }
+}
+/* This css for Responsive*/
+@media (min-width:600px) and (max-width:1920px) {
+
+    .flat-support-mobile{
+        display: none !important;
+    }
+}

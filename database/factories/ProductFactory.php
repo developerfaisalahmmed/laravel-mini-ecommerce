@@ -22,8 +22,11 @@ class ProductFactory extends Factory
             'slug' => fake()->name(),
             'description' => fake()->paragraph('50'),
             'status' => '1',
-            'quantity' => '99',
-            'image' => json_encode([fake()->imageUrl(),fake()->imageUrl()]),
+            'quantity' => fake()->numberBetween($min=100,$max=1000),
+            'discount_type' => fake()->numberBetween($min=1,$max=2),
+            'discount' => fake()->numberBetween($min=1,$max=30),
+            'price' => fake()->numberBetween($min=500,$max=5000),
+            'selling_price' => fake()->numberBetween($min=100,$max=500),
         ];
     }
 }

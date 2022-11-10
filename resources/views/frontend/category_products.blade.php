@@ -20,7 +20,7 @@
                                             <div class="card-jfy-item">
 
                                                 <div class="card-jfy-image card-jfy-image-background J_GridImage">
-                                                    <img class="image" src="{{asset(json_decode($product->image)[0]) ?? 'Null'}}" alt="">
+                                                    <img class="image" src="{{ asset($product->first_book[0]['image']) ?? 'Null'}}" alt="">
                                                 </div>
 
                                                 <div class="card-jfy-item-desc">
@@ -40,7 +40,13 @@
 
                                                         <div class="hp-mod-price-second-line"><span class="hp-mod-price-text align-left">
                                                     <span class="currency">৳</span><span class="price">{{$product->price}}</span></span>
-                                                            <span class="hp-mod-discount align-left"> ৳{{$product->price - $product->selling_price}}</span></div>
+                                                            <span class="hp-mod-discount align-left">
+                                                                 @if($product->discount_type == 1)
+                                                                    ৳{{$product->discount}}
+                                                                @else
+                                                                    {{$product->discount}}%
+                                                                @endif
+                                                            </span></div>
                                                     </div>
 
 

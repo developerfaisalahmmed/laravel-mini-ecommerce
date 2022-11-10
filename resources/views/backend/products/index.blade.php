@@ -28,7 +28,7 @@
                         <th>Selling Price</th>
                         <th>Quantity</th>
                         <th>Image</th>
-                        <th>Categories</th>
+                        <th>Category</th>
                         <th>Created Time</th>
                         <th>Update Time</th>
                         <th>Action</th>
@@ -43,14 +43,17 @@
                         <td>{{$product->selling_price}}</td>
                         <td>{{$product->quantity}}</td>
                         <td>
-                            @foreach(json_decode($product->image) ?? 'null' as $image)
-                                <img width="100px" height="31px" src="{{$image ?? 'Null'}}">
+                            @foreach($product->productImages ?? 'null' as $image)
+                                <img width="100px" height="31px" src="{{$image->image ?? 'Null'}}">
                             @endforeach
                         </td>
                         <td>
-                            @foreach($product->products_category ?? 'null' as $category)
-                                <a class="btn btn-success btn-sm btn-group">{{$category->name ?? 'Null'}}</a>
+                            @foreach($product->categories ?? 'null' as $category)
+{{--                                <img width="100px" height="31px" src="{{$image->image ?? 'Null'}}">--}}
+                                <a class="btn btn-success btn-sm btn-group"> {{$category->name ?? 'Null'}} </a>
+
                             @endforeach
+
                         </td>
                         <td>{{$product->created_at->diffForHumans()}}</td>
                         <td>{{$product->updated_at->diffForHumans()}}</td>

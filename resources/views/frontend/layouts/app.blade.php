@@ -18,7 +18,7 @@
         <div class="header-top">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-sm-4 col-md-4 flat-support-mobile2">
                         <ul class="flat-support">
                             <li>
                                 <a href="#" title="">Support</a>
@@ -31,7 +31,7 @@
                             </li>
                         </ul><!-- /.flat-support -->
                     </div><!-- /.col-md-4 -->
-                    <div class="col-md-4">
+                    <div class="col-sm-4 col-md-4 flat-support-mobile2">
                         <ul class="flat-infomation">
                             <li class="phone">
                                 Call Us: <a href="#" title="">(+91) 90129 83208</a>
@@ -39,13 +39,30 @@
                         </ul><!-- /.flat-infomation -->
                     </div><!-- /.col-md-4 -->
                     <div class="col-md-4">
+
                         <ul class="flat-unstyled">
+                            <li class="account flat-support-mobile">
+                                <a href="#" title="">Quick Access<i class="fa fa-angle-down"
+                                                                  aria-hidden="true"></i></a>
+                                <ul class="unstyled">
+                                    <li>
+                                        <a href="#" title=""> Support </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title=""> Store Locator </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title=""> Track Your Order  </a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li class="account">
                                 <a href="#" title="">My Account<i class="fa fa-angle-down"
                                                                   aria-hidden="true"></i></a>
                                 <ul class="unstyled">
                                     <li>
-                                        <a href="#" title="">Login</a>
+                                        <a href="{{route('login')}}" title="">Login</a>
                                     </li>
                                     <li>
                                         <a href="#" title="">Wishlist</a>
@@ -136,7 +153,7 @@
                             <div class="inner-box">
                                 <ul class="menu-compare-wishlist">
                                     <li class="compare">
-                                        <a href="#" title="">
+                                        <a onClick="window.location.reload();" href="#" title="">
                                             <i class="fa fa-superpowers"></i>
                                         </a>
                                     </li>

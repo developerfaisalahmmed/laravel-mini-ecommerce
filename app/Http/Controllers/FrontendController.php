@@ -23,6 +23,7 @@ class FrontendController extends Controller
             return $query;
         });
 
+
 //        return $data['category_products'];
 
         return view('frontend.index',$data);

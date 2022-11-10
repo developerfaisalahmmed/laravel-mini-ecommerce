@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
 use App\Models\Category;
 use App\Models\CategoryProduct;
 use App\Models\Product;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
-use Illuminate\Support\Facades\Validator;
+use App\Models\ProductImage;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
 {
@@ -19,9 +20,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('products_category')->orderBy('id','DESC')->get();
+        $products = Product::with('categories')->orderBy('id','DESC')->get();
 //        return $products;
-        return  view('backend.products.index',compact('products'));
+
+        return view('backend.products.index', compact('products'));
+
     }
 
     /**
@@ -32,89 +35,69 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return  view('backend.products.create',compact('categories'));
-
+        return view('backend.products.create', compact('categories'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreProductRequest  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreProductRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'price' => 'required',
-            'description' => 'required',
-            'category' => 'required',
-            'image' => 'required',
-            'image.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+        $validateData = $request->all();
+//                $category = Category::findOrFail($validateData['category_id']);
+        $product = Product::create([
+//                    'category_id' => $validateData['category_id'],
+            'title' => $validateData['title'],
+            'slug' => Str::slug($validateData['title']),
+            'price' => $validateData['price'],
+            'quantity' => $validateData['quantity'],
+            'discount_type' => $validateData['discount_type'],
+            'discount' => $validateData['discount'],
+            'selling_price' => $validateData['selling_price'],
+            'description' => $validateData['description'],
         ]);
 
-        if ($validator->fails()) {
-            $notification = array(
-                'message' => 'Opps! Something went wrong .Please Try Again.',
-                'alert-type' => 'error'
-            );
-            return redirect()->back()->withErrors($validator)->withInput()->with($notification);
-        } else {
-            $input  = $request->all();
 
-            if($request->hasfile('image'))
-            {
-                $i = 1;
-                foreach($request->file('image') as $image)
-                {
-                    $product_image = $image;
-                    $extension = $product_image->getClientOriginalExtension();
-                    $product_name = "product_" . time() . $i++ . "." . $extension;
-                    $image->move(public_path('uploads/product/'), $product_name);
-                    $data[] = 'uploads/product/'.$product_name;
-                }
+        if ($request->hasfile('image')) {
+            $i = 1;
+            foreach ($request->file('image') as $image) {
+                $product_image = $image;
+                $extension = $product_image->getClientOriginalExtension();
+                $product_name = "product_" . time() . $i++ . "." . $extension;
+                Image::make($product_image)->resize(700, 500)->save(public_path().'/uploads/product/'.$product_name);
+//                $image->move(public_path('uploads/product/'), $product_name);
+                $all_image_name = 'uploads/product/' . $product_name;
+                $product->productImages()->create([
+                    'product_id' => $product->id,
+                    'image' => $all_image_name,
+                ]);
             }
-
-            $product =  Product::create([
-                'title' => $input['title'],
-                'slug' => Str::slug($request->title),
-                'price' => $input['price'],
-                'quantity' => $input['quantity'],
-                'discount_type' => $input['discount_type'],
-                'discount' => $input['discount'],
-                'selling_price' => $input['selling_price'],
-                'description' => $input['description'],
-                'image' => json_encode($data),
-            ]);
-
-
-            //Product category
-            $categories = $request->category;
-            if (!empty($categories)) {
-                foreach ($categories as $product_category) {
-                    CategoryProduct::create([
-                        'product_id' => $product->id,
-                        'category_id' => $product_category
-                    ]);
-                }
-            }
-
-            $notification = array(
-                'message' => 'The new category publish successfully',
-                'alert-type' => 'success'
-            );
-            return redirect()->route('products.index')->with($notification);
-
         }
+
+        $categories = $request->category_id;
+        if ($categories) {
+            foreach ($categories as $category) {
+                $product->categoryProduct()->create([
+                    'product_id' => $product->id,
+                    'category_id' => $category,
+                ]);
+            }
+        }
+
+        return redirect()->route('products.index');
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
         //
     }
@@ -122,53 +105,106 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
-        //
+        $categories = Category::all();
+        $product = Product::findOrFail($id);
+        return view('backend.products.edit', compact('categories', 'product'));
+    }
+
+
+    public function productImageEdit($id)
+    {
+        $productImage = ProductImage::findOrFail($id);
+        $productImage->delete();
+        if ($productImage) {
+            $image_path = public_path($productImage->image);
+            if (file_exists($image_path)) {
+                @unlink($image_path);
+            }
+        }
+        return redirect()->back();
+    }
+
+    public function productCategoryEdit($id)
+    {
+//        return $id;
+
+        $categoryProduct = CategoryProduct::where('category_id',$id)->first();
+//        return $categoryProduct;
+        $categoryProduct->delete();
+        return redirect()->back();
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateProductRequest  $request
-     * @param  \App\Models\Product  $product
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(StoreProductRequest $request, $id)
     {
-        //
+
+
+        $validateData = $request->all();
+
+        $product = Product::where('id', $id)->first();
+
+        if ($product) {
+            $product->update([
+                'title' => $validateData['title'],
+                'slug' => Str::slug($validateData['title']),
+                'price' => $validateData['price'],
+                'quantity' => $validateData['quantity'],
+                'discount_type' => $validateData['discount_type'],
+                'discount' => $validateData['discount'],
+                'selling_price' => $validateData['selling_price'],
+                'description' => $validateData['description'],
+            ]);
+        }
+
+        if ($request->hasfile('image')) {
+            $i = 1;
+            foreach ($request->file('image') as $image) {
+                $product_image = $image;
+                $extension = $product_image->getClientOriginalExtension();
+                $product_name = "product_" . time() . $i++ . "." . $extension;
+//                $image->move(public_path('uploads/product/'), $product_name);
+                Image::make($product_image)->resize(700, 500)->save(public_path().'/uploads/product/'.$product_name);
+
+                $all_image_name = 'uploads/product/' . $product_name;
+                $product->productImages()->create([
+                    'product_id' => $product->id,
+                    'image' => $all_image_name,
+                ]);
+            }
+        }
+
+        $categories = $request->category_id;
+        if ($categories) {
+            foreach ($categories as $category) {
+                $product->categoryProduct()->create([
+                    'product_id' => $product->id,
+                    'category_id' => $category,
+                ]);
+            }
+        }
+
+        return redirect()->route('products.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-
-        $product->delete();
-        if ($product){
-
-            $get_product_images = json_decode($product->image);
-            foreach ($get_product_images as $get_product_image){
-                if (file_exists($get_product_image)) {
-                    @unlink($get_product_image);
-                }
-            }
-
-            $notification = array(
-                'message' => 'The Product has been deleted successfully',
-                'alert-type' => 'success'
-            );
-
-            return redirect()->route('products.index')->with($notification);
-        }
-
-
+        //
     }
 }

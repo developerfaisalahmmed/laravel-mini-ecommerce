@@ -22,16 +22,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <div class="card">
-                        {{--                                <img src="{{json_decode($product->image) ?? 'Null'}}" class="img-fluid" alt="...">--}}
+                    <div class="card pt-3">
                         <div class="xzoom-container">
-                            <img class="xzoom5" id="xzoom-magnific"
-                                 src="{{asset(json_decode($product->image)[0])}}"
-                                 xoriginal="{{asset(json_decode($product->image)[0])}}"/>
+                            <img height="200px" class="xzoom5" id="xzoom-magnific"
+                                 src="{{ asset($product->first_book[0]['image']) ?? 'Null' }} "
+                                 xoriginal="{{ asset($product->first_book[0]['image']) ?? 'Null'}} "/>
                             <div class="xzoom-thumbs">
-                                @foreach(json_decode($product->image) ?? 'null' as $image)
-                                    <a href="{{asset($image ?? 'Null')}}">
-                                        <img class="xzoom-gallery5" width="80" src="{{asset($image ?? 'Null')}}" xpreview="{{asset($image ?? 'Null')}}" title="The description goes here">
+                                @foreach($product->productImages ?? 'null' as $product_image)
+                                    <a href="{{asset($product_image->image ?? 'Null')}}">
+                                        <img class="xzoom-gallery5" width="80" src="{{asset($product_image->image ?? 'Null')}}" xpreview="{{asset($product_image->image ?? 'Null')}}" title="The description goes here">
                                     </a>
                                 @endforeach
                             </div>
@@ -55,9 +54,8 @@
 
 @push('js')
 
-    <script src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/js/vendor/jquery.js"></script>
-    <!-- xzoom plugin here -->
+    <script type="text/javascript" src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/js/vendor/jquery.js"></script>
     <script type="text/javascript" src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/dist/xzoom.min.js"></script>
     <script type="text/javascript" src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/magnific-popup/js/magnific-popup.js"></script>
-    <script src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/js/setup.js"></script>
+    <script type="text/javascript" src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/js/setup.js"></script>
 @endpush
