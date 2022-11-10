@@ -44,7 +44,7 @@
                         <td>{{$product->quantity}}</td>
                         <td>
                             @foreach(json_decode($product->image) ?? 'null' as $image)
-                                <img width="100px" src="{{$image ?? 'Null'}}">
+                                <img width="100px" height="31px" src="{{$image ?? 'Null'}}">
                             @endforeach
                         </td>
                         <td>
@@ -54,10 +54,15 @@
                         </td>
                         <td>{{$product->created_at->diffForHumans()}}</td>
                         <td>{{$product->updated_at->diffForHumans()}}</td>
-                        <td>
-                            <a href="" ><i class="lni lni-highlight-alt"></i></a>
-                            <a href="" ><i class="lni lni-eye"></i></a>
-                            <a href="" ><i class="lni lni-cross-circle"></i></a>
+                        <td class="d-flex">
+                            <a href="{{route('products.edit',$product->id)}}" class="btn btn-sm" ><i class="lni lni-highlight-alt"></i></a>
+                             <a href="" class="btn btn-sm" ><i class="lni lni-eye"></i></a>
+                            <form action="{{route('products.destroy',$product->id)}}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-sm" type="submit"><i class="lni lni-cross-circle"></i></button>
+
+                            </form>
                         </td>
                     </tr>
                     @endforeach

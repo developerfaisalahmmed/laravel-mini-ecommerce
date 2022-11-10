@@ -18,7 +18,7 @@ class FrontendController extends Controller
         $data['categories'] = Category::all();
 
 
-        $data['category_products'] = Category::with(['category_products'])->get()->map(function ($query) {
+        $data['category_products'] = Category::with(['category_products'])->orderBy('id','DESC')->get()->map(function ($query) {
             $query->setRelation('category_products', $query->category_products->take(12));
             return $query;
         });

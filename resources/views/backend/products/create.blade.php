@@ -24,12 +24,14 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-6">
+
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
                             <input name="title" type="text" class="form-control" id="title">
                             <div
                                 style='color:red; padding: 0 5px;'>{{($errors->has('title'))?($errors->first('title')):''}}</div>
                         </div>
+
                         <div class="mb-3">
                             <label for="quantity" class="form-label">Quantity</label>
                             <input name="quantity" type="number" class="form-control" id="quantity">
@@ -62,11 +64,20 @@
                             <label for="selling_price"> Discount Price: </label>
                             <input readonly type="number" name="selling_price" class="form-control" value="0.00"
                                    id="selling_price">
-                            <div
-                                style='color:red; padding: 0 5px;'>{{($errors->has('selling_price'))?($errors->first('selling_price')):''}}</div>
+                            <div style='color:red; padding: 0 5px;'>{{($errors->has('selling_price'))?($errors->first('selling_price')):''}}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Categories</label>
+                            <select class="form-control myselect2" name="category[]" multiple="multiple" id="category">
+                                @foreach($categories as $category)
+                                <option value="{{$category->id}}">{{$category->name}}</option>
+                                @endforeach
+                            </select>
+                            <div style='color:red; padding: 0 5px;'>{{($errors->has('category'))?($errors->first('category')):''}}</div>
+                        </div>
+
                         <div class="mb-3">
                             <label for="defaultImage"> Image </label>
                             <div class="input-group control-group increment" >
@@ -87,6 +98,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div style='color:red; padding: 0 5px;'>{{($errors->has('image'))?($errors->first('image')):''}}</div>
 
                     </div>
                     <div class="col-md-12">

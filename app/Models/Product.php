@@ -12,7 +12,7 @@ class Product extends Model
     protected $fillable = ['title','slug','price','quantity','discount_type','discount','selling_price','description','image'];
 
     public function products_category(){
-        return $this->belongsToMany(Category::class,'category_products','product_id');
+        return $this->belongsToMany(Category::class,'category_products','product_id')->orderBy('id','DESC');;
     }
 
 

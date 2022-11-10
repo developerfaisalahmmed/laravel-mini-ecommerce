@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\CategoryProduct;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -29,7 +31,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return  view('backend.products.create');
+        $categories = Category::all();
+        return  view('backend.products.create',compact('categories'));
 
     }
 
@@ -41,45 +44,68 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-//        $validator = Validator::make($request->all(), [
-//            'title' => 'required',
-//            'price' => 'required',
-//            'description' => 'required',
-//            'image' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
-//        ]);
-//
-//        if ($validator->fails()) {
-//            $notification = array(
-//                'message' => 'Opps! Something went wrong .Please Try Again.',
-//                'alert-type' => 'error'
-//            );
-//            return redirect()->back()->withErrors($validator)->withInput()->with($notification);
-//        } else {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'price' => 'required',
+            'description' => 'required',
+            'category' => 'required',
+            'image' => 'required',
+            'image.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            $notification = array(
+                'message' => 'Opps! Something went wrong .Please Try Again.',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->withErrors($validator)->withInput()->with($notification);
+        } else {
             $input  = $request->all();
 
             if($request->hasfile('image'))
             {
+                $i = 1;
                 foreach($request->file('image') as $image)
                 {
                     $product_image = $image;
                     $extension = $product_image->getClientOriginalExtension();
-                    $product_name = "product_" . time() . "." . $extension;
+                    $product_name = "product_" . time() . $i++ . "." . $extension;
                     $image->move(public_path('uploads/product/'), $product_name);
                     $data[] = 'uploads/product/'.$product_name;
                 }
             }
 
-            $input['image'] = json_encode($data);
-            $input['slug'] = Str::slug($request->title);
+            $product =  Product::create([
+                'title' => $input['title'],
+                'slug' => Str::slug($request->title),
+                'price' => $input['price'],
+                'quantity' => $input['quantity'],
+                'discount_type' => $input['discount_type'],
+                'discount' => $input['discount'],
+                'selling_price' => $input['selling_price'],
+                'description' => $input['description'],
+                'image' => json_encode($data),
+            ]);
 
-            Product::create($input);
+
+            //Product category
+            $categories = $request->category;
+            if (!empty($categories)) {
+                foreach ($categories as $product_category) {
+                    CategoryProduct::create([
+                        'product_id' => $product->id,
+                        'category_id' => $product_category
+                    ]);
+                }
+            }
+
             $notification = array(
                 'message' => 'The new category publish successfully',
                 'alert-type' => 'success'
             );
-            return redirect()->route('categories.index')->with($notification);
-//
-//        }
+            return redirect()->route('products.index')->with($notification);
+
+        }
     }
 
     /**
@@ -124,6 +150,25 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+
+        $product->delete();
+        if ($product){
+
+            $get_product_images = json_decode($product->image);
+            foreach ($get_product_images as $get_product_image){
+                if (file_exists($get_product_image)) {
+                    @unlink($get_product_image);
+                }
+            }
+
+            $notification = array(
+                'message' => 'The Product has been deleted successfully',
+                'alert-type' => 'success'
+            );
+
+            return redirect()->route('products.index')->with($notification);
+        }
+
+
     }
 }
