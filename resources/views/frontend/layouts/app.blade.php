@@ -34,7 +34,7 @@
                     <div class="col-sm-4 col-md-4 flat-support-mobile2">
                         <ul class="flat-infomation">
                             <li class="phone">
-                                Call Us: <a href="#" title="">(+91) 90129 83208</a>
+                                Call Us: <a href="#" title="">(+088) 01307788699</a>
                             </li>
                         </ul><!-- /.flat-infomation -->
                     </div><!-- /.col-md-4 -->
