@@ -27,6 +27,8 @@ class ViewComposerServiceProvider extends ServiceProvider
     {
         View::composer('frontend.layouts.app',function ($header){
             $header->with('categories', Category::where('status', 1)->get() );
+
+            $header->with('cartItems', $cartItems = \Cart::getContent() );
         });
     }
 }

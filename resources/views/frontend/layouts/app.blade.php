@@ -43,7 +43,7 @@
                         <ul class="flat-unstyled">
                             <li class="account flat-support-mobile">
                                 <a href="#" title="">Quick Access<i class="fa fa-angle-down"
-                                                                  aria-hidden="true"></i></a>
+                                                                    aria-hidden="true"></i></a>
                                 <ul class="unstyled">
                                     <li>
                                         <a href="#" title=""> Support </a>
@@ -52,7 +52,7 @@
                                         <a href="#" title=""> Store Locator </a>
                                     </li>
                                     <li>
-                                        <a href="#" title=""> Track Your Order  </a>
+                                        <a href="#" title=""> Track Your Order </a>
                                     </li>
                                 </ul>
                             </li>
@@ -61,14 +61,12 @@
                                 <a href="#" title="">My Account<i class="fa fa-angle-down"
                                                                   aria-hidden="true"></i></a>
                                 <ul class="unstyled">
-                                    <li>
-                                        <a href="{{route('login')}}" title="">Login</a>
-                                    </li>
+
                                     <li>
                                         <a href="#" title="">Wishlist</a>
                                     </li>
                                     <li>
-                                        <a href="#" title="">My Cart</a>
+                                        <a href="{{route('cart.list')}}" title="">My Cart</a>
                                     </li>
                                     <li>
                                         <a href="#" title="">My Account</a>
@@ -76,6 +74,29 @@
                                     <li>
                                         <a href="#" title="">Checkout</a>
                                     </li>
+                                    @auth
+
+                                        <li>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                  style="display: none;">
+                                                @csrf
+                                            </form>
+                                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                               onclick="event.preventDefault();
+                                                document.getElementById('logout-form').submit();">
+                                                Logout
+                                            </a>
+                                        </li>
+
+                                    @else
+                                        <li>
+                                            <a href="{{route('login')}}" title="">Login</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{route('register')}}" title="">Register</a>
+                                        </li>
+                                    @endauth
+
                                 </ul>
                             </li>
                             <li>
@@ -121,7 +142,7 @@
                         <div id="logo" class="logo">
                             <a href="{{url('/')}}" title="">
                                 <img class="logo_image" src="{{asset('frontend')}}/images/quick_on_shop.png" alt="">
-{{--                                <h3>LOGO HERE</h3>--}}
+                                {{--                                <h3>LOGO HERE</h3>--}}
                             </a>
                         </div><!-- /#logo -->
                     </div><!-- /.col-md-3 -->
@@ -132,7 +153,7 @@
                                     <select name="category">
                                         <option value="">All Category</option>
                                         @foreach($categories as $category)
-                                        <option value="{{$category->slug}}">{{$category->name}}</option>
+                                            <option value="{{$category->slug}}">{{$category->name}}</option>
                                         @endforeach
                                     </select>
 
@@ -168,58 +189,51 @@
                                 <a href="#" title="">
                                     <div class="icon-cart">
                                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                        <span>4</span>
+                                        <span>{{ Cart::getTotalQuantity()}}</span>
                                     </div>
+                                    @if(Cart::getTotal() > 0)
                                     <div class="price">
-                                        $0.00
+                                        ৳ {{ Cart::getTotal() }}
                                     </div>
+                                    @endif
                                 </a>
-                                <div class="dropdown-box">
-                                    <ul>
-                                        <li>
-                                            <div class="img-product">
-                                                <img src="https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a33-5g.jpg"
-                                                     alt="">
-                                            </div>
-                                            <div class="info-product">
-                                                <div class="name">
-                                                    Samsung - Galaxy S6 4G LTE <br />with 32GB Memory Cell Phone
-                                                </div>
-                                                <div class="price">
-                                                    <span>1 x</span>
-                                                    <span>$250.00</span>
-                                                </div>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                            <span class="delete">x</span>
-                                        </li>
-                                        <li>
-                                            <div class="img-product">
-                                                <img src="https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a33-5g.jpg"
-                                                     alt="">
-                                            </div>
-                                            <div class="info-product">
-                                                <div class="name">
-                                                    Samsung - Galaxy S6 4G LTE <br />with 32GB Memory Cell Phone
-                                                </div>
-                                                <div class="price">
-                                                    <span>1 x</span>
-                                                    <span>$250.00</span>
-                                                </div>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                            <span class="delete">x</span>
-                                        </li>
-                                    </ul>
-                                    <div class="total">
-                                        <span>Subtotal:</span>
-                                        <span class="price">$1,999.00</span>
+                                @if(Cart::getTotal() > 0)
+                                    <div class="dropdown-box">
+                                        <ul>
+                                            @foreach ($cartItems as $item)
+                                                <li>
+                                                    <div class="img-product">
+                                                        <img src="{{ $item->attributes->image }}" alt="">
+                                                    </div>
+                                                    <div class="info-product">
+                                                        <div class="name"> {{ $item->name }}</div>
+                                                        <div class="price">
+                                                            <span>{{ $item->quantity }} x</span>
+                                                            <span>৳{{ $item->price }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <span class="delete">
+                                                    <form action="{{ route('cart.remove') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" value="{{ $item->id }}" name="id">
+                                        <button class="btn btn-sm btn-success btn-height">x</button>
+                                    </form></span>
+                                                </li>
+                                            @endforeach
+
+                                        </ul>
+                                        <div class="total">
+                                            <span>Subtotal:</span>
+                                            <span class="price">৳{{ Cart::getTotal() }}</span>
+                                        </div>
+                                        <div class="btn-cart d-flex justify-content-between">
+                                            <a href="{{route('cart.list')}}" class="btn btn-sm btn-warning btn-height"
+                                               title="">View Cart</a>
+                                            <a href="#" class="btn btn-sm btn-success btn-height" title="">Checkout</a>
+                                        </div>
                                     </div>
-                                    <div class="btn-cart">
-                                        <a href="#" class="view-cart" title="">View Cart</a>
-                                        <a href="#" class="check-out" title="">Checkout</a>
-                                    </div>
-                                </div>
+                                @endif
                             </div><!-- /.inner-box -->
                         </div><!-- /.box-cart -->
                     </div><!-- /.col-md-3 -->
@@ -234,459 +248,460 @@
                             <div class="btn-mega"><span></span>ALL CATEGORIES</div>
                             <ul class="menu">
                                 @foreach($categories as $category)
-                                <li>
-                                    <a href="{{route('category.products',$category->slug)}}" title="" class="dropdown">
+                                    <li>
+                                        <a href="{{route('category.products',$category->slug)}}" title=""
+                                           class="dropdown">
                                             <span class="menu-img">
                                                 <img src="#" alt="">
                                             </span>
-                                        <span class="menu-title">
+                                            <span class="menu-title">
                                                {{$category->name}}
                                             </span>
-                                    </a>
-                                    <div class="drop-menu">
-                                        <div class="one-third">
-                                            <div class="cat-title">
-                                                Laptop And Mac
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <a href="#" title="">Networking & Internet Devices</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" title="">Laptops, Desktops & Monitors</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" title="">Hard Drives & Memory Cards</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" title="">Computer Accessories</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" title="">Software</a>
-                                                </li>
-                                            </ul>
-                                            <div class="show">
-                                                <a href="#" title="">Shop All</a>
-                                            </div>
-                                        </div>
-                                        <div class="one-third">
-                                            <div class="cat-title">
-                                                Audio & Video
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <a href="#" title="">Headphones & Speakers</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" title="">Home Entertainment Systems</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" title="">MP3 & Media Players</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" title="">Software</a>
-                                                </li>
-                                            </ul>
-                                            <div class="show">
-                                                <a href="#" title="">Shop All</a>
-                                            </div>
-                                        </div>
-                                        <div class="one-third">
-                                            <ul class="banner">
-                                                <li>
-                                                    <div class="banner-text">
-                                                        <div class="banner-title">
-                                                            Headphones
-                                                        </div>
-                                                        <div class="more-link">
-                                                            <a href="#" title="">Shop Now <img src="#" alt=""></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="banner-img">
-                                                        <img src="#" alt="">
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </li>
-                                                <li>
-                                                    <div class="banner-text">
-                                                        <div class="banner-title">
-                                                            TV & Audio
-                                                        </div>
-                                                        <div class="more-link">
-                                                            <a href="#" title="">Shop Now <img src="#" alt=""></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="banner-img">
-                                                        <img src="#" alt="">
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </li>
-                                                <li>
-                                                    <div class="banner-text">
-                                                        <div class="banner-title">
-                                                            Computers
-                                                        </div>
-                                                        <div class="more-link">
-                                                            <a href="#" title="">Shop Now <img src="#" alt=""></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="banner-img">
-                                                        <img src="#" alt="">
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </li>
+                                        </a>
+                                        {{--                                    <div class="drop-menu">--}}
+                                        {{--                                        <div class="one-third">--}}
+                                        {{--                                            <div class="cat-title">--}}
+                                        {{--                                                Laptop And Mac--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                            <ul>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <a href="#" title="">Networking & Internet Devices</a>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <a href="#" title="">Laptops, Desktops & Monitors</a>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <a href="#" title="">Hard Drives & Memory Cards</a>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <a href="#" title="">Computer Accessories</a>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <a href="#" title="">Software</a>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                            </ul>--}}
+                                        {{--                                            <div class="show">--}}
+                                        {{--                                                <a href="#" title="">Shop All</a>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                        {{--                                        <div class="one-third">--}}
+                                        {{--                                            <div class="cat-title">--}}
+                                        {{--                                                Audio & Video--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                            <ul>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <a href="#" title="">Headphones & Speakers</a>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <a href="#" title="">Home Entertainment Systems</a>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <a href="#" title="">MP3 & Media Players</a>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <a href="#" title="">Software</a>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                            </ul>--}}
+                                        {{--                                            <div class="show">--}}
+                                        {{--                                                <a href="#" title="">Shop All</a>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                        {{--                                        <div class="one-third">--}}
+                                        {{--                                            <ul class="banner">--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <div class="banner-text">--}}
+                                        {{--                                                        <div class="banner-title">--}}
+                                        {{--                                                            Headphones--}}
+                                        {{--                                                        </div>--}}
+                                        {{--                                                        <div class="more-link">--}}
+                                        {{--                                                            <a href="#" title="">Shop Now <img src="#" alt=""></a>--}}
+                                        {{--                                                        </div>--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                    <div class="banner-img">--}}
+                                        {{--                                                        <img src="#" alt="">--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                    <div class="clearfix"></div>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <div class="banner-text">--}}
+                                        {{--                                                        <div class="banner-title">--}}
+                                        {{--                                                            TV & Audio--}}
+                                        {{--                                                        </div>--}}
+                                        {{--                                                        <div class="more-link">--}}
+                                        {{--                                                            <a href="#" title="">Shop Now <img src="#" alt=""></a>--}}
+                                        {{--                                                        </div>--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                    <div class="banner-img">--}}
+                                        {{--                                                        <img src="#" alt="">--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                    <div class="clearfix"></div>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                                <li>--}}
+                                        {{--                                                    <div class="banner-text">--}}
+                                        {{--                                                        <div class="banner-title">--}}
+                                        {{--                                                            Computers--}}
+                                        {{--                                                        </div>--}}
+                                        {{--                                                        <div class="more-link">--}}
+                                        {{--                                                            <a href="#" title="">Shop Now <img src="#" alt=""></a>--}}
+                                        {{--                                                        </div>--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                    <div class="banner-img">--}}
+                                        {{--                                                        <img src="#" alt="">--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                    <div class="clearfix"></div>--}}
+                                        {{--                                                </li>--}}
+                                        {{--                                            </ul>--}}
+                                        {{--                                        </div>--}}
+                                        {{--                                    </div>--}}
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
                     </div><!-- /.col-md-3 col-2 -->
                     <div class="col-md-9 col-10">
                         <div class="nav-wrap">
-{{--                            <div id="mainnav" class="mainnav">--}}
-{{--                                <ul class="menu">--}}
-{{--                                    <li class="column-1">--}}
-{{--                                        <a href="#" title="">Home</a>--}}
-{{--                                        <ul class="submenu">--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Layout 01</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Layout 02</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Layout 03</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Layout 04</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Layout 05</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Layout 06</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Layout 07</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Layout 08</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Layout 09</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Layout 10</a>--}}
-{{--                                            </li>--}}
-{{--                                        </ul><!-- /.submenu -->--}}
-{{--                                    </li><!-- /.column-1 -->--}}
-{{--                                    <li class="column-1">--}}
-{{--                                        <a href="shop.html" title="">Shop</a>--}}
-{{--                                        <ul class="submenu">--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Shop left sidebar</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Shop right sidebar</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Shop list view</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Shop full width</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Shop 03 column</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Shop cart</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Shop checkout</a>--}}
-{{--                                            </li>--}}
-{{--                                        </ul><!-- /.submenu -->--}}
-{{--                                    </li><!-- /.column-1 -->--}}
-{{--                                    <li class="column-1">--}}
-{{--                                        <a href="#" title="">Features</a>--}}
-{{--                                        <ul class="submenu">--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Home Theater Systems</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Receivers & Amplifiers</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Speakers</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>CD Players & Turntables</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>High-Resolution Audio</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>4K Ultra HD TVs</a>--}}
-{{--                                            </li>--}}
-{{--                                        </ul><!-- /.submenu -->--}}
-{{--                                    </li><!-- /.column-1 -->--}}
-{{--                                    <li class="has-mega-menu">--}}
-{{--                                        <a href="#" title="">Electronic</a>--}}
-{{--                                        <div class="submenu">--}}
-{{--                                            <div class="row">--}}
-{{--                                                <div class="col-lg-3 col-md-12">--}}
-{{--                                                    <h3 class="cat-title">Accessories</h3>--}}
-{{--                                                    <ul class="submenu-child">--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Electronics</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Furniture</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Accessories</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Divided</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Everyday Fashion</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Modern Classic</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Party</a>--}}
-{{--                                                        </li>--}}
-{{--                                                    </ul>--}}
-{{--                                                    <div class="show">--}}
-{{--                                                        <a href="#" title="">Shop All</a>--}}
-{{--                                                    </div>--}}
-{{--                                                </div><!-- /.col-lg-3 col-md-12 -->--}}
-{{--                                                <div class="col-lg-3 col-md-12">--}}
-{{--                                                    <h3 class="cat-title">Laptop And Computer</h3>--}}
-{{--                                                    <ul class="submenu-child">--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Networking & Internet Devices</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Laptops, Desktops & Monitors</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Hard Drives & Memory Cards</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Printers & Ink</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Networking & Internet Devices</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Computer Accessories</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Software</a>--}}
-{{--                                                        </li>--}}
-{{--                                                    </ul>--}}
-{{--                                                    <div class="show">--}}
-{{--                                                        <a href="#" title="">Shop All</a>--}}
-{{--                                                    </div>--}}
-{{--                                                </div><!-- /.col-lg-3 col-md-12 -->--}}
-{{--                                                <div class="col-lg-4 col-md-12">--}}
-{{--                                                    <h3 class="cat-title">Audio & Video</h3>--}}
-{{--                                                    <ul class="submenu-child">--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Headphones & Speakers</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Home Entertainment Systems</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">MP3 & Media Players</a>--}}
-{{--                                                        </li>--}}
-{{--                                                    </ul>--}}
-{{--                                                    <div class="show">--}}
-{{--                                                        <a href="#" title="">Shop All</a>--}}
-{{--                                                    </div>--}}
-{{--                                                </div><!-- /.col-lg-4 col-md-12 -->--}}
-{{--                                                <div class="col-lg-2 col-md-12">--}}
-{{--                                                    <h3 class="cat-title">Home Audio</h3>--}}
-{{--                                                    <ul class="submenu-child">--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Home Theater Systems</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Receivers & Amplifiers</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">Speakers</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">CD Players & Turntables</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">High-Resolution Audio</a>--}}
-{{--                                                        </li>--}}
-{{--                                                        <li>--}}
-{{--                                                            <a href="#" title="">4K Ultra HD TVs</a>--}}
-{{--                                                        </li>--}}
-{{--                                                    </ul>--}}
-{{--                                                    <div class="show">--}}
-{{--                                                        <a href="#" title="">Shop All</a>--}}
-{{--                                                    </div>--}}
-{{--                                                </div><!-- /.col-lg-2 col-md-12 -->--}}
-{{--                                            </div><!-- /.row -->--}}
-{{--                                            <div class="row">--}}
-{{--                                                <div class="col-md-6">--}}
-{{--                                                    <div class="banner-box">--}}
-{{--                                                        <div class="inner-box">--}}
-{{--                                                            <a href="#" title="">--}}
-{{--                                                                <img src="#" alt="">--}}
-{{--                                                            </a>--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="col-md-6">--}}
-{{--                                                    <div class="banner-box">--}}
-{{--                                                        <div class="inner-box">--}}
-{{--                                                            <a href="#" title="">--}}
-{{--                                                                <img src="#" alt="">--}}
-{{--                                                            </a>--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div><!-- /.row -->--}}
-{{--                                        </div><!-- /.submenu -->--}}
-{{--                                    </li><!-- /.has-mega-menu -->--}}
-{{--                                    <li class="column-1">--}}
-{{--                                        <a href="#" title="">Pages</a>--}}
-{{--                                        <ul class="submenu">--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>About</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>404 Page</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Brands Page</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Categories 01</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Categories 02</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Element</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>FAQ</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Order Tracking</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Terms & Conditions</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Single Product 01</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Single Product 02</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Single Product 03</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Single Product 04</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Single Product 05</a>--}}
-{{--                                            </li>--}}
-{{--                                        </ul><!-- /.submenu -->--}}
-{{--                                    </li><!-- /.column-1 -->--}}
-{{--                                    <li class="column-1">--}}
-{{--                                        <a href="#" title="">Blog</a>--}}
-{{--                                        <ul class="submenu">--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Blog left sidebar</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Blog right sidebar</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Blog list</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Blog 02 column</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Blog full width</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Blog single</a>--}}
-{{--                                            </li>--}}
-{{--                                        </ul><!-- /.submenu -->--}}
-{{--                                    </li><!-- /.column-1 -->--}}
-{{--                                    <li class="column-1">--}}
-{{--                                        <a href="#" title="">Contact</a>--}}
-{{--                                        <ul class="submenu">--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Contact 01</a>--}}
-{{--                                            </li>--}}
-{{--                                            <li>--}}
-{{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
-{{--                                                                        aria-hidden="true"></i>Contact 02</a>--}}
-{{--                                            </li>--}}
-{{--                                        </ul><!-- /.submenu -->--}}
-{{--                                    </li><!-- /.column-1 -->--}}
-{{--                                </ul><!-- /.menu -->--}}
-{{--                            </div><!-- /.mainnav -->--}}
+                            {{--                            <div id="mainnav" class="mainnav">--}}
+                            {{--                                <ul class="menu">--}}
+                            {{--                                    <li class="column-1">--}}
+                            {{--                                        <a href="#" title="">Home</a>--}}
+                            {{--                                        <ul class="submenu">--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Layout 01</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Layout 02</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Layout 03</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Layout 04</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Layout 05</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Layout 06</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Layout 07</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Layout 08</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Layout 09</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Layout 10</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                        </ul><!-- /.submenu -->--}}
+                            {{--                                    </li><!-- /.column-1 -->--}}
+                            {{--                                    <li class="column-1">--}}
+                            {{--                                        <a href="shop.html" title="">Shop</a>--}}
+                            {{--                                        <ul class="submenu">--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Shop left sidebar</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Shop right sidebar</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Shop list view</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Shop full width</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Shop 03 column</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Shop cart</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Shop checkout</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                        </ul><!-- /.submenu -->--}}
+                            {{--                                    </li><!-- /.column-1 -->--}}
+                            {{--                                    <li class="column-1">--}}
+                            {{--                                        <a href="#" title="">Features</a>--}}
+                            {{--                                        <ul class="submenu">--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Home Theater Systems</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Receivers & Amplifiers</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Speakers</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>CD Players & Turntables</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>High-Resolution Audio</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>4K Ultra HD TVs</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                        </ul><!-- /.submenu -->--}}
+                            {{--                                    </li><!-- /.column-1 -->--}}
+                            {{--                                    <li class="has-mega-menu">--}}
+                            {{--                                        <a href="#" title="">Electronic</a>--}}
+                            {{--                                        <div class="submenu">--}}
+                            {{--                                            <div class="row">--}}
+                            {{--                                                <div class="col-lg-3 col-md-12">--}}
+                            {{--                                                    <h3 class="cat-title">Accessories</h3>--}}
+                            {{--                                                    <ul class="submenu-child">--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Electronics</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Furniture</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Accessories</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Divided</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Everyday Fashion</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Modern Classic</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Party</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                    </ul>--}}
+                            {{--                                                    <div class="show">--}}
+                            {{--                                                        <a href="#" title="">Shop All</a>--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                </div><!-- /.col-lg-3 col-md-12 -->--}}
+                            {{--                                                <div class="col-lg-3 col-md-12">--}}
+                            {{--                                                    <h3 class="cat-title">Laptop And Computer</h3>--}}
+                            {{--                                                    <ul class="submenu-child">--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Networking & Internet Devices</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Laptops, Desktops & Monitors</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Hard Drives & Memory Cards</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Printers & Ink</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Networking & Internet Devices</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Computer Accessories</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Software</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                    </ul>--}}
+                            {{--                                                    <div class="show">--}}
+                            {{--                                                        <a href="#" title="">Shop All</a>--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                </div><!-- /.col-lg-3 col-md-12 -->--}}
+                            {{--                                                <div class="col-lg-4 col-md-12">--}}
+                            {{--                                                    <h3 class="cat-title">Audio & Video</h3>--}}
+                            {{--                                                    <ul class="submenu-child">--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Headphones & Speakers</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Home Entertainment Systems</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">MP3 & Media Players</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                    </ul>--}}
+                            {{--                                                    <div class="show">--}}
+                            {{--                                                        <a href="#" title="">Shop All</a>--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                </div><!-- /.col-lg-4 col-md-12 -->--}}
+                            {{--                                                <div class="col-lg-2 col-md-12">--}}
+                            {{--                                                    <h3 class="cat-title">Home Audio</h3>--}}
+                            {{--                                                    <ul class="submenu-child">--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Home Theater Systems</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Receivers & Amplifiers</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">Speakers</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">CD Players & Turntables</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">High-Resolution Audio</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                        <li>--}}
+                            {{--                                                            <a href="#" title="">4K Ultra HD TVs</a>--}}
+                            {{--                                                        </li>--}}
+                            {{--                                                    </ul>--}}
+                            {{--                                                    <div class="show">--}}
+                            {{--                                                        <a href="#" title="">Shop All</a>--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                </div><!-- /.col-lg-2 col-md-12 -->--}}
+                            {{--                                            </div><!-- /.row -->--}}
+                            {{--                                            <div class="row">--}}
+                            {{--                                                <div class="col-md-6">--}}
+                            {{--                                                    <div class="banner-box">--}}
+                            {{--                                                        <div class="inner-box">--}}
+                            {{--                                                            <a href="#" title="">--}}
+                            {{--                                                                <img src="#" alt="">--}}
+                            {{--                                                            </a>--}}
+                            {{--                                                        </div>--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                </div>--}}
+                            {{--                                                <div class="col-md-6">--}}
+                            {{--                                                    <div class="banner-box">--}}
+                            {{--                                                        <div class="inner-box">--}}
+                            {{--                                                            <a href="#" title="">--}}
+                            {{--                                                                <img src="#" alt="">--}}
+                            {{--                                                            </a>--}}
+                            {{--                                                        </div>--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                </div>--}}
+                            {{--                                            </div><!-- /.row -->--}}
+                            {{--                                        </div><!-- /.submenu -->--}}
+                            {{--                                    </li><!-- /.has-mega-menu -->--}}
+                            {{--                                    <li class="column-1">--}}
+                            {{--                                        <a href="#" title="">Pages</a>--}}
+                            {{--                                        <ul class="submenu">--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>About</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>404 Page</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Brands Page</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Categories 01</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Categories 02</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Element</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>FAQ</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Order Tracking</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Terms & Conditions</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Single Product 01</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Single Product 02</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Single Product 03</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Single Product 04</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Single Product 05</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                        </ul><!-- /.submenu -->--}}
+                            {{--                                    </li><!-- /.column-1 -->--}}
+                            {{--                                    <li class="column-1">--}}
+                            {{--                                        <a href="#" title="">Blog</a>--}}
+                            {{--                                        <ul class="submenu">--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Blog left sidebar</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Blog right sidebar</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Blog list</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Blog 02 column</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Blog full width</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Blog single</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                        </ul><!-- /.submenu -->--}}
+                            {{--                                    </li><!-- /.column-1 -->--}}
+                            {{--                                    <li class="column-1">--}}
+                            {{--                                        <a href="#" title="">Contact</a>--}}
+                            {{--                                        <ul class="submenu">--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Contact 01</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                            <li>--}}
+                            {{--                                                <a href="#" title=""><i class="fa fa-angle-right"--}}
+                            {{--                                                                        aria-hidden="true"></i>Contact 02</a>--}}
+                            {{--                                            </li>--}}
+                            {{--                                        </ul><!-- /.submenu -->--}}
+                            {{--                                    </li><!-- /.column-1 -->--}}
+                            {{--                                </ul><!-- /.menu -->--}}
+                            {{--                            </div><!-- /.mainnav -->--}}
                         </div><!-- /.nav-wrap -->
                         <div class="today-deal">
                             <a href="#" title="">TODAY DEALS</a>
@@ -711,19 +726,22 @@
                     <ul>
                         <li>
                             <span>
-                                <img src="https://azse77seaprodsa.blob.core.windows.net/b2b-dr-pickaboocdn/media/wysiwyg/cmsp/location.png">
+                                <img
+                                    src="https://azse77seaprodsa.blob.core.windows.net/b2b-dr-pickaboocdn/media/wysiwyg/cmsp/location.png">
                             </span>
                             House 11, Road 15, Block H,Gulshan 9, Dhaka - 1213, Bangladesh
                         </li>
                         <li>
                             <span>
-                                <img src="https://azse77seaprodsa.blob.core.windows.net/b2b-dr-pickaboocdn/media/wysiwyg/cmsp/call.png">
+                                <img
+                                    src="https://azse77seaprodsa.blob.core.windows.net/b2b-dr-pickaboocdn/media/wysiwyg/cmsp/call.png">
                             </span>
                             +8801307788699
                         </li>
                         <li>
                             <span>
-                                <img src="https://azse77seaprodsa.blob.core.windows.net/b2b-dr-pickaboocdn/media/wysiwyg/cmsp/msg.png">
+                                <img
+                                    src="https://azse77seaprodsa.blob.core.windows.net/b2b-dr-pickaboocdn/media/wysiwyg/cmsp/msg.png">
                             </span>
                             support@quickonshop.com
                         </li>

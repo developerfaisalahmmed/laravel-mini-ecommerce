@@ -4,8 +4,10 @@
 
 @push('css')
 
-    <link rel="stylesheet" type="text/css" href="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/dist/xzoom.css" media="all"/>
-    <link type="text/css" rel="stylesheet" media="all" href="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/magnific-popup/css/magnific-popup.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/dist/xzoom.css" media="all"/>
+    <link type="text/css" rel="stylesheet" media="all"
+          href="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/magnific-popup/css/magnific-popup.css"/>
 
 @endpush
 
@@ -25,12 +27,15 @@
                     <div class="card pt-3">
                         <div class="xzoom-container">
                             <img height="200px" class="xzoom5" id="xzoom-magnific"
-                                 src="{{ asset($product->first_book[0]['image']) ?? 'Null' }} "
-                                 xoriginal="{{ asset($product->first_book[0]['image']) ?? 'Null'}} "/>
+                                 src="{{ asset($product->first_image[0]['image']) ?? 'Null' }} "
+                                 xoriginal="{{ asset($product->first_image[0]['image']) ?? 'Null'}} "/>
                             <div class="xzoom-thumbs">
                                 @foreach($product->productImages ?? 'null' as $product_image)
                                     <a href="{{asset($product_image->image ?? 'Null')}}">
-                                        <img class="xzoom-gallery5" width="80" src="{{asset($product_image->image ?? 'Null')}}" xpreview="{{asset($product_image->image ?? 'Null')}}" title="The description goes here">
+                                        <img class="xzoom-gallery5" width="80"
+                                             src="{{asset($product_image->image ?? 'Null')}}"
+                                             xpreview="{{asset($product_image->image ?? 'Null')}}"
+                                             title="The description goes here">
                                     </a>
                                 @endforeach
                             </div>
@@ -43,36 +48,45 @@
                 </div>
                 <div class="col-md-4">
                     <div class="_product-detail-content">
-                        <p class="_p-name"> Milton Bottle </p>
+                        <p class="_p-name"> {{$product->title}} </p>
                         <div class="_p-price-box">
                             <div class="p-list">
-                                <span> M.R.P. : <i class="fa fa-inr"></i> <del> 1399  </del>   </span>
-                                <span class="price"> Rs. 699 </span>
+                                <span> Product Price : <del> ৳{{$product->price}}  </del>   </span>
+                                <span> Selling Price : ৳{{$product->selling_price}}  </span>
+                                <span> Discount :
+                                    @if($product->discount_type == 1)
+                                        ৳{{$product->discount}}
+                                    @else
+                                        {{$product->discount}}%
+                                    @endif
+                                </span>
                             </div>
-                            <div class="_p-add-cart">
-                                <div class="_p-qty">
-                                    <span>Add Quantity</span>
-{{--                                    <div class="value-button decrease_" id="" value="Decrease Value">-</div>--}}
-                                    <input type="number" name="qty" id="number" value="1" min="1" />
-{{--                                    <div class="value-button increase_" id="" value="Increase Value">+</div>--}}
-                                </div>
+                            <div class="d-flex justify-content-between">
+                                <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" value="{{ $product->id }}" name="id">
+                                    <input type="hidden" value="{{ $product->title }}" name="name">
+                                    <input type="hidden" value="{{ $product->price }}" name="price">
+                                    <input type="hidden" value="{{ asset($product->first_image[0]['image']) ?? 'Null'}}"
+                                           name="image">
+                                    <input type="hidden" value="1" name="quantity">
+                                    <button class="btn btn-sm btn-warning btn-height" tabindex="0">
+                                        <i class="fa fa-heart"></i> Favourite
+                                    </button>
+                                </form>
+                                <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" value="{{ $product->id }}" name="id">
+                                    <input type="hidden" value="{{ $product->title }}" name="name">
+                                    <input type="hidden" value="{{ $product->price }}" name="price">
+                                    <input type="hidden" value="{{ asset($product->first_image[0]['image']) ?? 'Null'}}"
+                                           name="image">
+                                    <input type="hidden" value="1" name="quantity">
+                                    <button class="btn btn-sm btn-success btn-height" tabindex="0">
+                                        <i class="fa fa-shopping-cart"></i> Add to Cart
+                                    </button>
+                                </form>
                             </div>
-                            <form action="" method="post" accept-charset="utf-8">
-                                <ul class="spe_ul"></ul>
-                                <div class="_p-qty-and-cart">
-                                    <div class="_p-add-cart">
-                                        <button class="btn-theme btn buy-btn" tabindex="0">
-                                            <i class="fa fa-shopping-cart"></i> Buy Now
-                                        </button>
-                                        <button class="btn-theme btn btn-success" tabindex="0">
-                                            <i class="fa fa-shopping-cart"></i> Add to Cart
-                                        </button>
-                                        <input type="hidden" name="pid" value="18" />
-                                        <input type="hidden" name="price" value="850" />
-                                        <input type="hidden" name="url" value="" />
-                                    </div>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -86,10 +100,14 @@
 
 @push('js')
 
-    <script type="text/javascript" src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/js/vendor/jquery.js"></script>
-    <script type="text/javascript" src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/dist/xzoom.min.js"></script>
-    <script type="text/javascript" src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/magnific-popup/js/magnific-popup.js"></script>
-    <script type="text/javascript" src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/js/setup.js"></script>
+    <script type="text/javascript"
+            src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/js/vendor/jquery.js"></script>
+    <script type="text/javascript"
+            src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/dist/xzoom.min.js"></script>
+    <script type="text/javascript"
+            src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/magnific-popup/js/magnific-popup.js"></script>
+    <script type="text/javascript"
+            src="{{asset('frontend/product-gallery-with-image-zoom-xzoom')}}/js/setup.js"></script>
 
     <script>
         $('.decrease_').click(function () {
@@ -98,6 +116,7 @@
         $('.increase_').click(function () {
             increaseValue(this);
         });
+
         function increaseValue(_this) {
             var value = parseInt($(_this).siblings('input#number').val(), 10);
             value = isNaN(value) ? 0 : value;
