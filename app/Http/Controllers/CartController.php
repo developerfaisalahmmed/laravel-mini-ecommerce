@@ -71,7 +71,7 @@ class CartController extends Controller
     {
 
         Wishlist::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::user()->id ?? 'null',
             'product_id' => $request->id,
         ]);
 
@@ -81,7 +81,7 @@ class CartController extends Controller
 
     public function wishlists()
     {
-        $products = Wishlist::with('wishlistList')->where('user_id', Auth::user()->id)->get();
+        $products = Wishlist::with('wishlistList')->where('user_id', Auth::user()->id ?? 'null')->get();
         return view('frontend.wishlists', compact('products'));
 
     }
@@ -89,14 +89,14 @@ class CartController extends Controller
     public function wishlistRemove($id)
     {
         Wishlist::where('id', $id)->first()->delete();
-        $products = Wishlist::with('wishlistList')->where('user_id', Auth::user()->id)->get();
+        $products = Wishlist::with('wishlistList')->where('user_id', Auth::user()->id ?? 'null')->get();
         return view('frontend.wishlists', compact('products'));
 
     }
     public function wishlistClear()
     {
-        Wishlist::with('wishlistList')->where('user_id', Auth::user()->id)->delete();
-        $products = Wishlist::with('wishlistList')->where('user_id', Auth::user()->id)->get();
+        Wishlist::with('wishlistList')->where('user_id', Auth::user()->id ?? 'null')->delete();
+        $products = Wishlist::with('wishlistList')->where('user_id', Auth::user()->id ?? 'null')->get();
         return view('frontend.wishlists', compact('products'));
 
     }
