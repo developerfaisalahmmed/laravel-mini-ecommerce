@@ -63,16 +63,13 @@
                                 <ul class="unstyled">
 
                                     <li>
-                                        <a href="#" title="">Wishlist</a>
+                                        <a href="{{route('wishlists')}}" title="">Wishlist</a>
                                     </li>
                                     <li>
                                         <a href="{{route('cart.list')}}" title="">My Cart</a>
                                     </li>
                                     <li>
                                         <a href="#" title="">My Account</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="">Checkout</a>
                                     </li>
                                     @auth
 
@@ -179,22 +176,25 @@
                                         </a>
                                     </li>
                                     <li class="wishlist">
-                                        <a href="#" title="">
-                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                        <a href="{{route('wishlists')}}" title="">
+                                            <i class="fa fa-heart" aria-hidden="true"> <sup>{{$Wishlists->count()}}</sup> </i>
                                         </a>
                                     </li>
-                                </ul><!-- /.menu-compare-wishlist -->
+                                </ul>
+
+                                <!-- /.menu-compare-wishlist -->
                             </div><!-- /.inner-box -->
                             <div class="inner-box">
+
                                 <a href="#" title="">
                                     <div class="icon-cart">
                                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                         <span>{{ Cart::getTotalQuantity()}}</span>
                                     </div>
                                     @if(Cart::getTotal() > 0)
-                                    <div class="price">
-                                        ৳ {{ Cart::getTotal() }}
-                                    </div>
+                                        <div class="price">
+                                            ৳ {{ Cart::getTotal() }}
+                                        </div>
                                     @endif
                                 </a>
                                 @if(Cart::getTotal() > 0)

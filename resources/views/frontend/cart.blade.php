@@ -77,7 +77,7 @@
                     </div>
                     @else
                         <div class="py-5">
-                            <p class="text-center p-3 bg-dark text-danger"> No items fount in your cart </p>
+                            <p class="text-center p-3 bg-dark text-danger"> No items found in your cart </p>
                         </div>
                   @endif
                 </div>

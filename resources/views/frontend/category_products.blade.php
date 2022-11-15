@@ -26,24 +26,25 @@
                                         </sup></h6>
 
                                     <div class="py-1 d-flex justify-content-between">
-                                        <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
+                                        @auth
+                                            <form action="{{ route('wishlist') }}" method="POST"
+                                                  enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="hidden" value="{{ $product->id }}" name="id">
+
+                                                <button class="btn btn-sm btn-warning btn-height" tabindex="0">
+                                                    <i class="fa fa-heart"></i> Favourite
+                                                </button>
+                                            </form>
+                                        @endauth
+                                        <form action="{{ route('cart.store') }}" method="POST"
+                                              enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" value="{{ $product->id }}" name="id">
                                             <input type="hidden" value="{{ $product->title }}" name="name">
                                             <input type="hidden" value="{{ $product->price }}" name="price">
-                                            <input type="hidden" value="{{ asset($product->first_image[0]['image']) ?? 'Null'}}"
-                                                   name="image">
-                                            <input type="hidden" value="1" name="quantity">
-                                            <button class="btn btn-sm btn-warning btn-height" tabindex="0">
-                                                <i class="fa fa-heart"></i> Favourite
-                                            </button>
-                                        </form>
-                                        <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
-                                            @csrf
-                                            <input type="hidden" value="{{ $product->id }}" name="id">
-                                            <input type="hidden" value="{{ $product->title }}" name="name">
-                                            <input type="hidden" value="{{ $product->price }}" name="price">
-                                            <input type="hidden" value="{{ asset($product->first_image[0]['image']) ?? 'Null'}}"
+                                            <input type="hidden"
+                                                   value="{{ asset($product->first_image[0]['image']) ?? 'Null'}}"
                                                    name="image">
                                             <input type="hidden" value="1" name="quantity">
                                             <button class="btn btn-sm btn-success btn-height" tabindex="0">

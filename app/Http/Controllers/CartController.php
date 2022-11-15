@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -63,4 +65,41 @@ class CartController extends Controller
 
         return redirect()->route('cart.list');
     }
+
+
+    public function wishlist(Request $request)
+    {
+
+        Wishlist::create([
+            'user_id' => Auth::user()->id,
+            'product_id' => $request->id,
+        ]);
+
+        return redirect()->back();
+    }
+
+
+    public function wishlists()
+    {
+        $products = Wishlist::with('wishlistList')->where('user_id', Auth::user()->id)->get();
+        return view('frontend.wishlists', compact('products'));
+
+    }
+
+    public function wishlistRemove($id)
+    {
+        Wishlist::where('id', $id)->first()->delete();
+        $products = Wishlist::with('wishlistList')->where('user_id', Auth::user()->id)->get();
+        return view('frontend.wishlists', compact('products'));
+
+    }
+    public function wishlistClear()
+    {
+        Wishlist::with('wishlistList')->where('user_id', Auth::user()->id)->delete();
+        $products = Wishlist::with('wishlistList')->where('user_id', Auth::user()->id)->get();
+        return view('frontend.wishlists', compact('products'));
+
+    }
+
+
 }
