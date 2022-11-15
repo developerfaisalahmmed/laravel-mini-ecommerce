@@ -808,7 +808,7 @@ a {
 	color: #32393f;
   }
 
-  
+
   .w_chart canvas {
 	position: absolute;
 	top: 0;
@@ -1723,11 +1723,11 @@ a {
 .text-facebook{
 	color: #3b5998!important
  }
- 
+
  .text-twitter{
 	 color: #55acee!important
   }
- 
+
   .text-youtube{
 	 color: #e52d27!important
   }
@@ -1811,11 +1811,12 @@ a {
 }
 
 .btn i {
-	vertical-align: middle;
-	font-size: 1.3rem;
-	margin-top: -1em;
-	margin-bottom: -1em;
-	margin-right: 5px
+    vertical-align: middle;
+    font-size: 1rem;
+    margin-top: -1em;
+    margin-bottom: -1em;
+    margin-right: 5px;
+    color: chocolate;
 }
 
 

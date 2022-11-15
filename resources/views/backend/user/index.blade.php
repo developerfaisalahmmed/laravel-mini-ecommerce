@@ -1,21 +1,23 @@
 @extends('backend.layouts.app')
 
+@section('title')
+    Users
+@endsection
+
+
 
 @push('css')
+
 @endpush
-
-
-@section('title', 'Categories')
-
-
-
 
 @section('content')
 
+
     <div class="d-flex justify-content-between">
-        <h6 class="mb-0 text-uppercase"> Categories </h6>
-        <a class="btn btn-success" href="{{route('categories.create')}}"> New Category </a>
+        <h6 class="mb-0 text-uppercase"> Users </h6>
+        <a class="btn btn-info" href="{{route('users.create')}}"> New User </a>
     </div>
+
     <hr/>
     <div class="card">
         <div class="card-body">
@@ -23,48 +25,54 @@
                 <table id="example2" class="table table-striped table-bordered">
                     <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>ID</th>
                         <th>Name</th>
-                        <th>Image</th>
-                        <th>Created Time</th>
-                        <th>Update Time</th>
+                        <th>Email</th>
+                        <th>Role Names</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($categories as $key => $category)
+                    @foreach ($users as $key => $user)
                         <tr>
                             <td>{{$key+1}}</td>
-                            <td>{{$category->name}}</td>
-                            <td><img width="100px" height="31px" src="{{asset($category->image) ?? 'Null'}}"></td>
-                            <td>{{$category->created_at->diffForHumans()}}</td>
-                            <td>{{$category->updated_at->diffForHumans()}}</td>
+                            <td>{{$user->name}}</td>
+                            <td>{{$user->email}}</td>
+                            <td>{{$user->getRoleNames() ?? ''}}</td>
                             <td class="d-flex">
-                                @can('category-edit')
-                                    <a href="{{route('categories.edit',$category->id)}}" class="btn btn-sm"><i
+                                @can('user-list')
+                                    <a href="{{ route('users.edit',$user->id) }}" class="btn btn-sm"><i
                                             class="lni lni-highlight-alt"></i></a>
                                 @endcan
-                                {{--                            <a href="" class="btn btn-sm" ><i class="lni lni-eye"></i></a>--}}
-                                @can('category-delete')
-                                    <form action="{{route('categories.destroy',$category->id)}}" method="POST">
+                                @can('user-edit')
+                                    <a href="{{ route('users.show',$user->id) }}" class="btn btn-sm"><i
+                                            class="lni lni-eye"></i></a>
+                                @endcan
+                                @can('user-delete')
+                                    <form method="POST"
+                                          action="{{route('users.destroy',$user->id)}}"
+                                          onsubmit="return confirm('Are you sure ?')">
+                                        @csrf
+                                        @method('DELETE')
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm" type="submit"><i class="lni lni-cross-circle"></i>
                                         </button>
+
                                     </form>
                                 @endcan
                             </td>
                         </tr>
                     @endforeach
+
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Id</th>
+                        <th>ID</th>
                         <th>Name</th>
-                        <th>Image</th>
-                        <th>Created Time</th>
-                        <th>Update Time</th>
+                        <th>Email</th>
                         <th>Action</th>
+
                     </tr>
                     </tfoot>
                 </table>
@@ -75,9 +83,7 @@
 @endsection
 
 
-
 @push('js')
-
 
 
 @endpush

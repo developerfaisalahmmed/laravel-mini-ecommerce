@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--favicon-->
-    <link rel="icon" href="{{asset('backend')}}/{{asset('backend')}}/assets/images/favicon-32x32.png" type="image/png" />
+    <link rel="icon" href="{{asset('backend')}}/{{asset('backend')}}/assets/images/favicon-32x32.png" type="image/png"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
     <title> @yield('title') </title>
@@ -14,11 +14,11 @@
 
     <!--plugins-->
     <link href="{{asset('backend')}}/assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet"/>
-    <link href="{{asset('backend')}}/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
-    <link href="{{asset('backend')}}/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
-    <link href="{{asset('backend')}}/assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+    <link href="{{asset('backend')}}/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet"/>
+    <link href="{{asset('backend')}}/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet"/>
+    <link href="{{asset('backend')}}/assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet"/>
     <!-- loader-->
-    <link href="{{asset('backend')}}/assets/css/pace.min.css" rel="stylesheet" />
+    <link href="{{asset('backend')}}/assets/css/pace.min.css" rel="stylesheet"/>
     <script src="{{asset('backend')}}/assets/js/pace.min.js"></script>
     <!-- Bootstrap CSS -->
     <link href="{{asset('backend')}}/assets/css/bootstrap.min.css" rel="stylesheet">
@@ -26,17 +26,17 @@
     <link href="{{asset('backend')}}/assets/css/app.css" rel="stylesheet">
     <link href="{{asset('backend')}}/assets/css/icons.css" rel="stylesheet">
     <!-- Theme Style CSS -->
-    <link rel="stylesheet" href="{{asset('backend')}}/assets/css/dark-theme.css" />
-    <link rel="stylesheet" href="{{asset('backend')}}/assets/css/semi-dark.css" />
-    <link rel="stylesheet" href="{{asset('backend')}}/assets/css/header-colors.css" />
+    <link rel="stylesheet" href="{{asset('backend')}}/assets/css/dark-theme.css"/>
+    <link rel="stylesheet" href="{{asset('backend')}}/assets/css/semi-dark.css"/>
+    <link rel="stylesheet" href="{{asset('backend')}}/assets/css/header-colors.css"/>
 
 
-    <link href="{{asset('backend')}}/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="{{asset('backend')}}/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
 
 
     <link rel="stylesheet" href="{{asset('backend')}}/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="{{asset('backend')}}/plugins/summernote/summernote-bs4.min.css">
-    <link rel="stylesheet" href="{{asset('backend')}}/plugins/select2/select2.min.css"  />
+    <link rel="stylesheet" href="{{asset('backend')}}/plugins/select2/select2.min.css"/>
 
     @stack('css')
 
@@ -47,10 +47,10 @@
 <!--wrapper-->
 <div class="wrapper">
     <!--sidebar wrapper -->
-    @include('layouts.siteber')
+    @include('backend.layouts.partials.siteber')
     <!--end sidebar wrapper -->
     <!--start header -->
-    @include('layouts.header')
+    @include('backend.layouts.partials.header')
     <!--end header -->
     <!--start page wrapper -->
     <div class="page-wrapper">
@@ -66,11 +66,11 @@
     <!--Start Back To Top Button-->
     <a href="javaScript:;" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
     <!--End Back To Top Button-->
-    @include('layouts.footer')
+    @include('backend.layouts.partials.footer')
 </div>
 <!--end wrapper-->
 <!--start switcher-->
-    @include('layouts.theme-customizer')
+@include('backend.layouts.partials.theme-customizer')
 <!--end switcher-->
 <!-- Bootstrap JS -->
 <script src="{{asset('backend')}}/assets/js/bootstrap.bundle.min.js"></script>
@@ -88,22 +88,20 @@
 <script src="{{asset('backend')}}/assets/js/app.js"></script>
 
 
-
 <script src="{{asset('backend')}}/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('backend')}}/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-        var table = $('#example2').DataTable( {
+    $(document).ready(function () {
+        var table = $('#example2').DataTable({
             lengthChange: false,
-            buttons: [ 'copy', 'excel', 'pdf', 'print']
-        } );
+            buttons: ['copy', 'excel', 'pdf', 'print']
+        });
 
         table.buttons().container()
-            .appendTo( '#example2_wrapper .col-md-6:eq(0)' );
-    } );
+            .appendTo('#example2_wrapper .col-md-6:eq(0)');
+    });
 </script>
-
 
 
 <!-- No image -->
@@ -111,17 +109,16 @@
 
 <!--Product Default image one -->
 <script>
-    $(document).ready(function() {
-        $('#defaultImage').change(function(e) {
+    $(document).ready(function () {
+        $('#defaultImage').change(function (e) {
             var reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 $('#showDefaultImage').attr('src', e.target.result);
             }
             reader.readAsDataURL(e.target.files['0']);
         });
     });
 </script>
-
 
 
 <!-- Toastr -->
@@ -158,22 +155,18 @@
 </script>
 
 
-
-
 <!-- Sweetalert -->
 <script src="{{asset('backend')}}/plugins/sweetalert/sweetalert2@9.js"></script>
 <script src="{{asset('backend')}}/plugins/sweetalert/sweetalertjs.js"></script>
-
 
 
 <!-- select2 -->
 <script src="{{asset('backend')}}/plugins/select2/select2.min.js"></script>
 
 
-
 <!-- select2 -->
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.myselect2').select2();
     });
 </script>

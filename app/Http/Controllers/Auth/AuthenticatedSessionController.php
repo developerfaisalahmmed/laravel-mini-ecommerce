@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
+
+
     /**
      * Display the login view.
      *
@@ -38,7 +40,6 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('cart.list');
         } else {
             return redirect()->intended(RouteServiceProvider::HOME);
-
         }
     }
 

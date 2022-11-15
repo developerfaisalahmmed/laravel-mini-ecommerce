@@ -13,11 +13,18 @@ use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    function __construct()
+    {
+        $this->middleware('permission:dashboard');
+
+        $this->middleware('permission:product-list|product-create|product-show|product-edit|product-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:product-show', ['only' => ['show']]);
+        $this->middleware('permission:product-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:product-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:product-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $products = Product::with('categories')->orderBy('id','DESC')->get();

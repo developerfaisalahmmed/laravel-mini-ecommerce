@@ -20,8 +20,12 @@
                 <div class="menu-title"> Product Management </div>
             </a>
             <ul>
+                @can('category-list')
                 <li> <a href="{{route('categories.index')}}"><i class="bx bx-right-arrow-alt"></i>Categories</a></li>
+                @endcan
+                    @can('product-list')
                 <li> <a href="{{route('products.index')}}"><i class="bx bx-right-arrow-alt"></i>Products</a></li>
+                    @endcan
 
             </ul>
         </li>
@@ -46,6 +50,31 @@
                 </li>
                 <li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Calendar</a>
                 </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="javascript:;" class="has-arrow">
+                <div class="parent-icon"><i class="bx bx-cog bx-spin"></i>
+                </div>
+                <div class="menu-title">Settings</div>
+            </a>
+            <ul>
+                @can('role-list')
+                    <li><a href="{{route('roles.index')}}"><i class="bx bx-right-arrow-alt"></i>Roles</a></li>
+                @endcan
+                @can('permission-list')
+                    <li><a href="{{route('permissions.index')}}"><i class="bx bx-right-arrow-alt"></i>Permissions</a></li>
+                @endcan
+                @can('user-list')
+                    <li><a href="{{route('users.index')}}"><i class="bx bx-right-arrow-alt"></i>Users</a>
+                    </li>
+                @endcan
+                @can('agent-list')
+                    <li><a href="{{route('agents.index')}}"><i class="bx bx-right-arrow-alt"></i>Agents</a>
+                    </li>
+                @endcan
+
             </ul>
         </li>
 
