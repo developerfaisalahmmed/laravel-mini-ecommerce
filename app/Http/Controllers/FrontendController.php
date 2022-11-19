@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FrontendController extends Controller
@@ -15,16 +16,12 @@ class FrontendController extends Controller
      */
     public function index()
     {
+
         $data['categories'] = Category::all();
-
-
         $data['category_products'] = Category::with(['category_products'])->orderBy('id','DESC')->get()->map(function ($query) {
             $query->setRelation('category_products', $query->category_products->take(12));
             return $query;
         });
-
-
-//        return $data['category_products'];
 
         return view('frontend.index',$data);
 

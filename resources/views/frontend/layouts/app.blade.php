@@ -176,9 +176,17 @@
                                         </a>
                                     </li>
                                     <li class="wishlist">
+                                        @if($Wishlists->count() > 0)
                                         <a href="{{route('wishlists')}}" title="">
-                                            <i class="fa fa-heart" aria-hidden="true"> <sup>{{$Wishlists->count()}}</sup> </i>
+                                            <i class="fa fa-heart" aria-hidden="true">
+                                                <sup>{{$Wishlists->count()}}</sup> </i>
                                         </a>
+                                        @else
+                                            <a href="" title="">
+                                                <i class="fa fa-heart" aria-hidden="true">
+                                                    <sup>{{$Wishlists->count()}}</sup> </i>
+                                            </a>
+                                        @endif
                                     </li>
                                 </ul>
 
@@ -230,7 +238,8 @@
                                         <div class="btn-cart d-flex justify-content-between">
                                             <a href="{{route('cart.list')}}" class="btn btn-sm btn-warning btn-height"
                                                title="">View Cart</a>
-                                            <a href="#" class="btn btn-sm btn-success btn-height" title="">Checkout</a>
+                                            <a href="{{route('checkout')}}" class="btn btn-sm btn-success btn-height"
+                                               title="">Checkout</a>
                                         </div>
                                     </div>
                                 @endif

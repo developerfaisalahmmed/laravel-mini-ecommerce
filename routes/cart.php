@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -14,3 +15,10 @@ Route::post('wishlist', [CartController::class, 'wishlist'])->name('wishlist');
 Route::get('wishlists', [CartController::class, 'wishlists'])->name('wishlists');
 Route::get('wishlist-remove/{id}', [CartController::class, 'wishlistRemove'])->name('wishlist.remove');
 Route::get('wishlist-clear', [CartController::class, 'wishlistClear'])->name('wishlist.clear');
+
+
+Route::controller(CheckoutController::class)->middleware(['auth'])->prefix('checkout')->group(function (){
+        Route::get('/','index')->name('checkout');
+        Route::post('/shipping','store')->name('checkout.shipping');
+});
+
