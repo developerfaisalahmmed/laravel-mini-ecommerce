@@ -5612,3 +5612,8 @@ body {
 .category_image {
     height: 74px !important;
 }
+.nav-pills .nav-link {
+    border-radius: .25rem;
+    margin: 2px !important;
+    color: black !important;
+}

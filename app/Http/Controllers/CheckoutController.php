@@ -64,7 +64,7 @@ class CheckoutController extends Controller
         } elseif ($request->payment_method == 'bkah') {
             return 'Sorry we are not accept bkah,only cash on delivery';
         } else {
-            return redirect('/cart');
+            return redirect('/profile');
         }
 
     }

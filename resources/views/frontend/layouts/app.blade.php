@@ -69,7 +69,7 @@
                                         <a href="{{route('cart.list')}}" title="">My Cart</a>
                                     </li>
                                     <li>
-                                        <a href="#" title="">My Account</a>
+                                        <a href="{{route('profile')}}" title="">My Account</a>
                                     </li>
                                     @auth
 
