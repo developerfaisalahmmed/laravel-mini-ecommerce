@@ -62,9 +62,10 @@
                                     <a href="{{route('products.edit',$product->id)}}" class="btn btn-sm"><i
                                             class="lni lni-highlight-alt"></i></a>
                                 @endcan
-                                    @can('product-show')
-                                <a href="" class="btn btn-sm"><i class="lni lni-eye"></i></a>
-                                    @endcan
+                                @can('product-show')
+                                    <a target="_blank" href="{{route('product.details',$product->slug)}}"
+                                       class="btn btn-sm"><i class="lni lni-eye"></i></a>
+                                @endcan
                                 @can('product-delete')
 
                                     <form action="{{route('products.destroy',$product->id)}}" method="POST">

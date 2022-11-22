@@ -13,8 +13,9 @@
 {{--                        <th scope="col">Invoice</th>--}}
                         <th scope="col">Title</th>
                         <th scope="col">Image</th>
+                        <th scope="col">Ask.Price</th>
+                        <th scope="col">S.Price</th>
                         <th scope="col">Quantity</th>
-                        <th scope="col">Price</th>
                         <th scope="col">T.Price</th>
                         <th scope="col">O.Status</th>
                         <th scope="col">Time</th>
@@ -27,9 +28,10 @@
                         <td>{{$key+1}}</td>
 {{--                        <td>{{$order->invoice_id}}</td>--}}
                         <td>{{$order->order_product_details->title}}</td>
-                        <td><img width="50px" src="{{$order->order_product_image_details->image}}"></td>
-                        <td>{{$order->quantity}}</td>
+                        <td><img style="width: 100px;height: 31px" src="{{$order->order_product_image_details->image}}"></td>
+                        <td>৳{{$order->ask_price}}</td>
                         <td>৳{{$order->price}}</td>
+                        <td>{{$order->quantity}}</td>
                         <td>৳{{$order->quantity*$order->price}}</td>
                         <td>{{$order->status}}</td>
                         <td>{{$order->created_at->diffForHumans()}}</td>

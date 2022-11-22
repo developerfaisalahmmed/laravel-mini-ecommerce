@@ -29,6 +29,22 @@
 
             </ul>
         </li>
+
+        <li>
+            <a href="javascript:;" class="has-arrow">
+                <div class="parent-icon"><i class="lni lni-cart"></i></div>
+                <div class="menu-title"> Order Management </div>
+            </a>
+            <ul>
+                @can('order-list')
+                <li> <a href="{{route('orders.index')}}"><i class="bx bx-right-arrow-alt"></i>Orders</a></li>
+                @endcan
+
+
+            </ul>
+        </li>
+
+
         <li>
             <a href="javascript:;" class="has-arrow">
                 <div class="parent-icon"><i class="bx bx-category"></i>

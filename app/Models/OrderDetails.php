@@ -10,7 +10,7 @@ class OrderDetails extends Model
     use HasFactory;
 
 
-    protected $fillable = ['invoice_id','product_id','price','quantity','discount_type','discount','selling_price','user_id','shipping_address_id'];
+    protected $fillable = ['order_id','invoice_id','product_id','price','quantity','discount_type','discount','ask_price','user_id','shipping_address_id'];
 
 
 
@@ -21,5 +21,7 @@ class OrderDetails extends Model
     public function order_product_image_details(){
         return $this->hasOne(ProductImage::class,'product_id','product_id');
     }
+
+
 
 }

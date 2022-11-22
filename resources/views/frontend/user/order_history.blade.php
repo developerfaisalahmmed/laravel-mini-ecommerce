@@ -11,8 +11,9 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Invoice</th>
-                        <th scope="col">Quantity</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Payment By</th>
                         <th scope="col">Payment</th>
                         <th scope="col">Time</th>
                         <th scope="col">Action</th>
@@ -23,8 +24,11 @@
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$order->invoice}}</td>
-                        <td>{{$order->total_qty}}</td>
                         <td>৳{{$order->payable_price}}</td>
+                        <td>{{$order->total_qty}}</td>
+                        <td>
+                            <a class="text-white btn-info p-1">{{$order->order_payment_details->payment_method}}</a>
+                        </td>
                         <td>{{$order->payment_status}}</td>
                         <td>{{$order->created_at->diffForHumans()}}</td>
                         <td>

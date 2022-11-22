@@ -15,16 +15,18 @@ return new class extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('order_id');
             $table->string('invoice_id');
             $table->integer('product_id');
             $table->float('price');
             $table->integer('quantity');
             $table->integer('discount_type');
             $table->integer('discount');
-            $table->float('selling_price');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('shipping_address_id');
+            $table->float('ask_price');
+            $table->integer('user_id');
+            $table->integer('shipping_address_id');
             $table->enum('status', ['Pending', 'Processing', 'Accept','Delivering','Delivered','Cancel'])->default('Pending');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->timestamps();
         });
     }

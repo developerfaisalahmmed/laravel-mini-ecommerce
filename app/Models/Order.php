@@ -20,4 +20,8 @@ class Order extends Model
         return $this->hasOne(User::class,'id','user_id');
     }
 
+    public function order_payment_details(){
+        return $this->hasOne(OrderPaymentDetails::class,'invoice_id','invoice');
+    }
+
 }

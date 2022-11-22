@@ -38,6 +38,11 @@ class PermissionSeeder extends Seeder
             'product-show',
             'product-edit',
             'product-delete',
+            'order-list',
+            'order-create',
+            'order-show',
+            'order-edit',
+            'order-delete',
 
         ];
 

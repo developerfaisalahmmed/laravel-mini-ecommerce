@@ -8,8 +8,8 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\UserOrderHistoryController;
-use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\Frontend\UserOrderHistoryController;
+use App\Http\Controllers\Frontend\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {

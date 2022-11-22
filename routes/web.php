@@ -1,7 +1,7 @@
 <?php
 
 
-use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\Frontend\FrontendController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/auth.php';

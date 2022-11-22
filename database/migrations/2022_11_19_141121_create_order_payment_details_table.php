@@ -15,11 +15,13 @@ return new class extends Migration
     {
         Schema::create('order_payment_details', function (Blueprint $table) {
             $table->id();
-            $table->string('invoice_id');
+            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('invoice_id');
             $table->float('price');
             $table->string('payment_method');
             $table->unsignedBigInteger('user_id');
             $table->enum('status', ['yes','Not'])->default('Not');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->timestamps();
         });
     }
